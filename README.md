@@ -22,8 +22,3 @@ Notify Chatwork when pull request events occured.
 6. Please set the following post destination url in chat work your account setting page. (room_id is chatwork room id.)
     * Pull Request POST hook:
     * http://example.com/bitbucket_event_notification/gateway.php?room_id=1000000000
-
-## Change log
-
-### v1.0.0
-- Initial release.
