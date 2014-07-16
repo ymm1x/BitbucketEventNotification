@@ -16,6 +16,7 @@ class PullRequestCommentCreated extends PullRequest
         $notify = '';
         $notify .= sprintf("[info]");
         $notify .= sprintf("Comment was posted by %s (*)", $this->data['user']['display_name']);
+        $notify .= sprintf("%s", $this->data['content']['raw']);
         $notify .= sprintf("\n%s", $this->data['links']['html']['href']);
         $notify .= sprintf("[/info]");
         return $notify;
