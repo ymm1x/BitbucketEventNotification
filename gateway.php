@@ -29,7 +29,7 @@ if (!isset($_GET['room_id']) || !$_GET['room_id']) {
 
 // Access source ip check
 $accessSource = new AccessSource($_SERVER['REMOTE_ADDR']);
-if (false && $accessSource->isForbidden()) {
+if ($accessSource->isForbidden()) {
     $logger->err('Unauthorized access.');
     $logger->err('IP Address: ' . $_SERVER['REMOTE_ADDR']);
     header('HTTP', true, 403);
@@ -143,7 +143,7 @@ $response = $chatworkAPI->postMessage($_GET['room_id'], $postText);
 unset($chatworkAPI);
 
 // Response
-if (false && $response !== null) {
+if ($response !== null) {
     header('HTTP', true, 200);
     echo json_encode($response);
     exit;
