@@ -129,6 +129,9 @@ if ($pullRequest === null) {
     if (!empty($jsonData)) {
         $logger->err('json data:' . print_r($jsonData));
     }
+    if (!empty($rawJson)) {
+        $logger->err('original json data:' . print_r($rawJson));
+    }
     header('HTTP', true, 403);
     echo json_encode(array('result' => false, 'message' => 'Failed to parse data.'));
     exit;
