@@ -125,12 +125,9 @@ $jsonData = $parser->parse($rawJson);
 $pullRequest = PullRequestFactory::create($jsonData);
 
 if ($pullRequest === null) {
-    $logger->err('Failed to parse json data.');
+    $logger->err('Failed to parse json data. An unsupported json format.');
     if (!empty($jsonData)) {
-        $logger->err('json data:' . print_r($jsonData));
-    }
-    if (!empty($rawJson)) {
-        $logger->err('original json data:' . print_r($rawJson));
+        $logger->err('json data:' . print_r($jsonData, true));
     }
     header('HTTP', true, 403);
     echo json_encode(array('result' => false, 'message' => 'Failed to parse data.'));
