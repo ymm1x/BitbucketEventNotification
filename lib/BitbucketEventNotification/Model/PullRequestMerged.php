@@ -15,8 +15,8 @@ class PullRequestMerged extends PullRequest
     {
         $notify = '';
         $notify .= sprintf("[info]");
-        $notify .= sprintf("Pull request has been merged by %s. Good job8-)", $this->data['author']['display_name']);
-        $notify .= sprintf("\n[%s] %s", $this->data['state'], $this->data['title']);
+        $notify .= sprintf("[title]Pull request has been merged by %s. Good job8-)[/title]", $this->data['author']['display_name']);
+        $notify .= sprintf("[%s] %s", $this->data['state'], $this->data['title']);
         $notify .= sprintf("[/info]");
         return $notify;
     }

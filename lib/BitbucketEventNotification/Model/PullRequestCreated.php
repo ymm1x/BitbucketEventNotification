@@ -15,8 +15,8 @@ class PullRequestCreated extends PullRequest
     {
         $notify = '';
         $notify .= sprintf("[info]");
-        $notify .= sprintf("Pull request has been created by %s. Please review(bow)", $this->data['author']['display_name']);
-        $notify .= sprintf("\n[%s] #%d %s", $this->data['state'], $this->data['id'], $this->data['title']);
+        $notify .= sprintf("[title]Pull request has been created by %s. Please review(bow)[/title]", $this->data['author']['display_name']);
+        $notify .= sprintf("[%s] #%d %s", $this->data['state'], $this->data['id'], $this->data['title']);
         if (strlen($this->data['description']) > 0) {
             $notify .= sprintf("\n%s", $this->data['description']);
         }
