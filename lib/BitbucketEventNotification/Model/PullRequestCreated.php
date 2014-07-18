@@ -20,7 +20,7 @@ class PullRequestCreated extends PullRequest
         if (strlen($this->data['description']) > 0) {
             $notify .= sprintf("\n%s", $this->data['description']);
         }
-        $notify .= sprintf("\nhttps://bitbucket.org/GMO-AS_CEO/linestreet-server/pull-request/%d", $this->data['id']);
+        $notify .= sprintf("\nhttps://bitbucket.org/%s/pull-request/%d", $this->data['destination']['full_name'], $this->data['id']);
         $notify .= sprintf("[/info]");
         return $notify;
     }
