@@ -12,6 +12,8 @@ use BitbucketEventNotification\Config\ConfigLoader;
 class ChatworkAPI
 {
 
+    const BASE_API_URL = 'https://api.chatwork.com/';
+
     /**
      * Post message to room.
      *
@@ -25,7 +27,7 @@ class ChatworkAPI
         $option = array('body' => $message);
 
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, 'https://api.chatwork.com/v1/rooms/' . intval($roomId) . '/messages');
+        curl_setopt($ch, CURLOPT_URL, self::BASE_API_URL . 'v1/rooms/' . intval($roomId) . '/messages');
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('X-ChatWorkToken: ' . $this->loadAccessToken()));
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($option, '', '&'));
