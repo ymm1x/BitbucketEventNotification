@@ -31,6 +31,9 @@ class PullRequestFactory
             case 'pullrequest_created':
                 $instance = new PullRequestCreated();
                 break;
+            case 'pullrequest_updated':
+                $instance = new PullRequestUpdated();
+                break;
             case 'pullrequest_declined':
                 $instance = new PullRequestDeclined();
                 break;
