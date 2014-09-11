@@ -16,7 +16,7 @@ class PullRequestDeclined extends PullRequest
         $notify = '';
         $notify .= sprintf("[info]");
         $notify .= sprintf("[title]Pull request has been declined by %s:([/title]", $this->data['author']['display_name']);
-        $notify .= sprintf("[%s] %s", $this->data['state'], $this->data['title']);
+        $notify .= sprintf("[DECLINED] %s", $this->data['title']);
         $notify .= sprintf("[/info]");
         return $notify;
     }

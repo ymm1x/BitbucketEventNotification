@@ -15,8 +15,8 @@ class PullRequestUpdated extends PullRequest
     {
         $notify = '';
         $notify .= sprintf("[info]");
-        $notify .= sprintf("[title]Pull request has been updated by %s. Please re-review(bow)[/title]", $this->data['author']['display_name']);
-        $notify .= sprintf("[%s] %s", $this->data['state'], $this->data['title']);
+        $notify .= sprintf("[title]Pull request has been updated by %s. Please re-review:p[/title]", $this->data['author']['display_name']);
+        $notify .= sprintf("[UPDATE] %s", $this->data['title']);
         $notify .= sprintf("[/info]");
         return $notify;
     }
