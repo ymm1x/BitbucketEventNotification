@@ -1,13 +1,18 @@
 <?php
-namespace BitbucketEventNotification\Model;
+namespace BitbucketEventNotification\PullRequest;
 
 /**
- * This class is factory class of PullRequest model.
+ * This class is a base model that represents the pull request hook.
  *
- * @package BitbucketEventNotification\Model
+ * @package BitbucketEventNotification\PullRequest
  */
-class PullRequestFactory
+abstract class PullRequest
 {
+    /**
+     * @var array data
+     */
+    protected $data = null;
+
     /**
      * Return the instance corresponding to the data.
      *
@@ -46,10 +51,29 @@ class PullRequestFactory
         }
 
         if ($instance instanceof PullRequest) {
-            // inject json data
+            /**
+             * @var PullRequest $instance
+             */
+            // inject data
             $instance->setData($jsonData);
         }
 
         return $instance;
+    }
+
+    /**
+     * @param array $data
+     */
+    public function setData($data)
+    {
+        $this->data = $data;
+    }
+
+    /**
+     * @return array
+     */
+    public function getData()
+    {
+        return $this->data;
     }
 }

@@ -4,11 +4,9 @@ ini_set('display_errors', 0);
 require 'lib/autoload.php';
 require 'vendor/autoload.php';
 
-use BitbucketEventNotification\Chatwork\ChatworkAPI;
+use BitbucketEventNotification\DestinationService\DestinationService;
 use BitbucketEventNotification\JsonParser\JsonParser;
-use BitbucketEventNotification\Model\PullRequestApproval;
-use BitbucketEventNotification\Model\PullRequestFactory;
-use BitbucketEventNotification\Network\AccessSource;
+use BitbucketEventNotification\PullRequest\PullRequest;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 
@@ -25,6 +23,11 @@ if (!isset($_GET['room_id']) || !$_GET['room_id']) {
     header('HTTP', true, 403);
     echo json_encode(array('result' => false, 'message' => 'Invalid access.'));
     exit;
+}
+
+if (!isset($_GET['destination_service']) || !$_GET['destination_service']) {
+    // default service: chatwork (keep backward compatibility)
+    $_GET['destination_service'] = 'chatwork';
 }
 
 // Access source ip check
@@ -122,7 +125,7 @@ EOT;
 // Parse json
 $parser = new JsonParser();
 $jsonData = $parser->parse($rawJson);
-$pullRequest = PullRequestFactory::create($jsonData);
+$pullRequest = PullRequest::create($jsonData);
 
 if ($pullRequest === null) {
     $logger->err('Failed to parse json data. An unsupported json format.');
@@ -134,13 +137,18 @@ if ($pullRequest === null) {
     exit;
 }
 
-$postText = $pullRequest->toNotifyString();
-unset($jsonData, $rawJson, $pullRequest);
+// Decide destination service
+$destinationService = DestinationService::create($_GET['destination_service'], $pullRequest);
+if (!$destinationService) {
+    $logger->err('Invalid destination service parameter.');
+    $logger->err('Specified destination service value:' . $_GET['destination_service']);
+    header('HTTP', true, 403);
+    echo json_encode(array('result' => false, 'message' => 'Invalid access.'));
+    exit;
+}
 
 // Post message
-$chatworkAPI = new ChatworkAPI();
-$response = $chatworkAPI->postMessage($_GET['room_id'], $postText);
-unset($chatworkAPI);
+$response = $destinationService->postMessage(array('room_id' => $_GET['room_id']));
 
 // Response
 if ($response !== null) {

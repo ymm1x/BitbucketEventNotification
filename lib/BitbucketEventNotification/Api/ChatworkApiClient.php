@@ -1,5 +1,5 @@
 <?php
-namespace BitbucketEventNotification\Chatwork;
+namespace BitbucketEventNotification\Api;
 
 use BitbucketEventNotification\Config\ConfigLoader;
 
@@ -7,11 +7,13 @@ use BitbucketEventNotification\Config\ConfigLoader;
  * This class is api interface for Chatwork.
  * Require token is setting.
  *
- * @package BitbucketEventNotification\Chatwork
+ * @package BitbucketEventNotification\Api
  */
-class ChatworkAPI
+class ChatworkApiClient extends BaseApiClient
 {
-
+    /**
+     * @const Base api url.
+     */
     const BASE_API_URL = 'https://api.chatwork.com/';
 
     /**
@@ -35,7 +37,6 @@ class ChatworkAPI
 
         $response = curl_exec($ch);
         $statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-
         if ($statusCode === 200) {
             if ($response = json_decode($response)) {
                 return $response;
