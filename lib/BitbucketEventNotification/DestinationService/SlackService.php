@@ -64,7 +64,7 @@ class SlackService extends DestinationService
         } else if ($this->pullRequest instanceof PullRequestDeclined) {
             $notify .= sprintf("Pull request has been declined by %s:(", $data['author']['display_name']);
         } else if ($this->pullRequest instanceof PullRequestCommentCreated) {
-            $notify .= sprintf("Comment was posted by %s:star:", $data['author']['display_name']);
+            $notify .= sprintf("Comment was posted by %s:star:", $data['user']['display_name']);
         } else if ($this->pullRequest instanceof PullRequestMerged) {
             $notify .= sprintf("Pull request has been merged by %s. Good job:sunglasses:", $data['author']['display_name']);
         } else if ($this->pullRequest instanceof PullRequestUpdated) {
@@ -115,6 +115,17 @@ class SlackService extends DestinationService
                 'title' => 'Title',
                 'value' => sprintf("%s", $data['title']),
                 'short' => true,
+            );
+        } else if ($this->pullRequest instanceof PullRequestCommentCreated) {
+            $fields[] = array(
+                'title' => 'Author',
+                'value' => $data['user']['display_name'],
+                'short' => false,
+            );
+            $fields[] = array(
+                'title' => 'Content',
+                'value' => sprintf("%s", $data['content']['raw']),
+                'short' => false,
             );
         } else if ($this->pullRequest instanceof PullRequestMerged) {
             $fields[] = array(
