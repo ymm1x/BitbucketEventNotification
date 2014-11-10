@@ -2,6 +2,7 @@
 namespace BitbucketEventNotification\DestinationService;
 
 use BitbucketEventNotification\Api\SlackApiClient;
+use BitbucketEventNotification\PullRequest\PullRequestCommentCreated;
 use BitbucketEventNotification\PullRequest\PullRequestCreated;
 use BitbucketEventNotification\PullRequest\PullRequestDeclined;
 use BitbucketEventNotification\PullRequest\PullRequestMerged;
@@ -62,6 +63,8 @@ class SlackService extends DestinationService
             $notify .= sprintf("\nhttps://bitbucket.org/%s/pull-request/%d", $data['destination']['repository']['full_name'], $data['id']);
         } else if ($this->pullRequest instanceof PullRequestDeclined) {
             $notify .= sprintf("Pull request has been declined by %s:(", $data['author']['display_name']);
+        } else if ($this->pullRequest instanceof PullRequestCommentCreated) {
+            $notify .= sprintf("Comment was posted by %s:star:", $data['author']['display_name']);
         } else if ($this->pullRequest instanceof PullRequestMerged) {
             $notify .= sprintf("Pull request has been merged by %s. Good job:sunglasses:", $data['author']['display_name']);
         } else if ($this->pullRequest instanceof PullRequestUpdated) {

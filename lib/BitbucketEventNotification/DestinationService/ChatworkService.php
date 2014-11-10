@@ -2,6 +2,7 @@
 namespace BitbucketEventNotification\DestinationService;
 
 use BitbucketEventNotification\Api\ChatworkApiClient;
+use BitbucketEventNotification\PullRequest\PullRequestCommentCreated;
 use BitbucketEventNotification\PullRequest\PullRequestCreated;
 use BitbucketEventNotification\PullRequest\PullRequestDeclined;
 use BitbucketEventNotification\PullRequest\PullRequestMerged;
@@ -70,6 +71,12 @@ class ChatworkService extends DestinationService
             $notify .= sprintf("[title]Pull request has been declined by %s:([/title]", $data['author']['display_name']);
             $notify .= sprintf("[DECLINED] %s", $data['title']);
             $notify .= sprintf("[/info]");
+        } else if ($this->pullRequest instanceof PullRequestCommentCreated) {
+            $notify .= sprintf("[info]");
+            $notify .= sprintf("[title]Comment was posted by %s(*)[/title]", $this->data['user']['display_name']);
+            $notify .= sprintf("%s", $this->data['content']['raw']);
+            $notify .= sprintf("\n%s", $this->replaceUrlForLink($this->data['links']['html']['href']));
+            $notify .= sprintf("[/info]");
         } else if ($this->pullRequest instanceof PullRequestMerged) {
             $notify .= sprintf("[info]");
             $notify .= sprintf("[title]Pull request has been merged by %s. Good job8-)[/title]", $data['author']['display_name']);
@@ -84,5 +91,16 @@ class ChatworkService extends DestinationService
             $notify = null;
         }
         return $notify;
+    }
+
+    /**
+     * Replace endpoint url to url link.
+     *
+     * @param string $url
+     * @return string
+     */
+    private function replaceUrlForLink($url)
+    {
+        return str_replace('://api.', '://', $url);
     }
 }
