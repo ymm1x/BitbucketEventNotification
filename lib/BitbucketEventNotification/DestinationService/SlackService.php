@@ -120,12 +120,12 @@ class SlackService extends DestinationService
             $fields[] = array(
                 'title' => 'Author',
                 'value' => $data['user']['display_name'],
-                'short' => false,
+                'short' => true,
             );
             $fields[] = array(
                 'title' => 'Content',
                 'value' => sprintf("%s", $data['content']['raw']),
-                'short' => false,
+                'short' => true,
             );
         } else if ($this->pullRequest instanceof PullRequestMerged) {
             $fields[] = array(
