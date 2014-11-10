@@ -4,3 +4,4 @@ tmp/*
 vendor/*
 composer.lock
 config/chatwork.json
+config/slack.json
