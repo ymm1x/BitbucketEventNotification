@@ -73,9 +73,9 @@ class ChatworkService extends DestinationService
             $notify .= sprintf("[/info]");
         } else if ($this->pullRequest instanceof PullRequestCommentCreated) {
             $notify .= sprintf("[info]");
-            $notify .= sprintf("[title]Comment was posted by %s(*)[/title]", $this->data['user']['display_name']);
-            $notify .= sprintf("%s", $this->data['content']['raw']);
-            $notify .= sprintf("\n%s", $this->replaceUrlForLink($this->data['links']['html']['href']));
+            $notify .= sprintf("[title]Comment was posted by %s(*)[/title]", $data['user']['display_name']);
+            $notify .= sprintf("%s", $data['content']['raw']);
+            $notify .= sprintf("\n%s", $this->replaceUrlForLink($data['links']['html']['href']));
             $notify .= sprintf("[/info]");
         } else if ($this->pullRequest instanceof PullRequestMerged) {
             $notify .= sprintf("[info]");
