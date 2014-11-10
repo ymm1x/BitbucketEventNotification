@@ -6,6 +6,7 @@ require 'vendor/autoload.php';
 
 use BitbucketEventNotification\DestinationService\DestinationService;
 use BitbucketEventNotification\JsonParser\JsonParser;
+use BitbucketEventNotification\Network\AccessSource;
 use BitbucketEventNotification\PullRequest\PullRequest;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
