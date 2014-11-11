@@ -2,7 +2,7 @@
 namespace BitbucketEventNotification\PullRequest;
 
 /**
- * This class is factory class of PullRequest model.
+ * This class is a model that represents the pull request hook.
  *
  * @package BitbucketEventNotification\PullRequest
  */
