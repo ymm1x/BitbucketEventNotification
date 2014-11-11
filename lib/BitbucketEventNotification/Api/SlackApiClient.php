@@ -2,6 +2,7 @@
 namespace BitbucketEventNotification\Api;
 
 use BitbucketEventNotification\Config\ConfigLoader;
+use BitbucketEventNotification\Log\MLog;
 
 /**
  * This class is api interface for Slack.
@@ -44,12 +45,16 @@ class SlackApiClient
 
         $response = curl_exec($ch);
         $statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-
         if ($statusCode === 200 && $response = json_decode($response)) {
             if ($response->ok === true) {
+                MLog::getInstance()->info("Successful response data:" . json_encode($response));
                 return $response;
             }
         }
+
+        MLog::getInstance()->err("Error occurred while executing slack api.");
+        MLog::getInstance()->err("Status code: {$statusCode}");
+        MLog::getInstance()->err("Response: " . json_encode($response));
 
         return null;
     }

@@ -2,6 +2,7 @@
 namespace BitbucketEventNotification\Api;
 
 use BitbucketEventNotification\Config\ConfigLoader;
+use BitbucketEventNotification\Log\MLog;
 
 /**
  * This class is api interface for Chatwork.
@@ -39,9 +40,14 @@ class ChatworkApiClient extends BaseApiClient
         $statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         if ($statusCode === 200) {
             if ($response = json_decode($response)) {
+                MLog::getInstance()->info("Successful response data:" . json_encode($response));
                 return $response;
             }
         }
+
+        MLog::getInstance()->err("Error occurred while executing chatwork api.");
+        MLog::getInstance()->err("Status code: {$statusCode}");
+        MLog::getInstance()->err("Response: " . json_encode($response));
 
         return null;
     }
