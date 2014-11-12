@@ -1,4 +1,14 @@
 <?php
+use BitbucketEventNotification\DestinationService\DestinationService;
+use BitbucketEventNotification\JsonParser\JsonParser;
+use BitbucketEventNotification\Log\MLog;
+use BitbucketEventNotification\Network\AccessSource;
+use BitbucketEventNotification\PullRequest\PullRequest;
+use Monolog\Logger;
+
+require 'lib/autoload.php';
+require 'vendor/autoload.php';
+
 /**
  * @const Log level for the Monolog.
  */
@@ -19,16 +29,6 @@ const APP_DIR = __DIR__;
 ini_set('display_errors', 0);
 MLog::initInstance(LOG_LEVEL);
 MLog::getInstance()->info('Access from ip address: ' . $_SERVER['REMOTE_ADDR']);
-
-require 'lib/autoload.php';
-require 'vendor/autoload.php';
-
-use BitbucketEventNotification\DestinationService\DestinationService;
-use BitbucketEventNotification\JsonParser\JsonParser;
-use BitbucketEventNotification\Log\MLog;
-use BitbucketEventNotification\Network\AccessSource;
-use BitbucketEventNotification\PullRequest\PullRequest;
-use Monolog\Logger;
 
 header('Content-type: application/json; charset=utf-8');
 
