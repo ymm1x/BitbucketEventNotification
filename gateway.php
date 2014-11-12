@@ -1,8 +1,24 @@
 <?php
-const DEBUG_MODE = false;
+/**
+ * @const Log level for the Monolog.
+ */
+const LOG_LEVEL = Logger::WARNING;
+
+/**
+ * @const Forcibly overwrite to test JSON the request.
+ *        The contents of the overwrite json contents see the following URL.
+ *        https://confluence.atlassian.com/display/BITBUCKET/Pull+Request+POST+hook+management
+ */
+const USE_TEST_JSON = false;
+
+/**
+ * @const This script directory path.
+ */
 const APP_DIR = __DIR__;
 
 ini_set('display_errors', 0);
+MLog::initInstance(LOG_LEVEL);
+MLog::getInstance()->info('Access from ip address: ' . $_SERVER['REMOTE_ADDR']);
 
 require 'lib/autoload.php';
 require 'vendor/autoload.php';
@@ -15,12 +31,6 @@ use BitbucketEventNotification\PullRequest\PullRequest;
 use Monolog\Logger;
 
 header('Content-type: application/json; charset=utf-8');
-
-// Initialize Monolog instance for debug mode
-if (DEBUG_MODE) {
-    MLog::initInstance(Logger::INFO);
-    MLog::getInstance()->info('Access from ip address: ' . $_SERVER['REMOTE_ADDR']);
-}
 
 // Check arguments
 if (!isset($_GET['room_id']) || !$_GET['room_id']) {
@@ -47,8 +57,7 @@ if ($accessSource->isForbidden()) {
 unset($accessSource);
 
 // Get json from chatwork
-$inputPath = DEBUG_MODE ? APP_DIR . '/sample-merged-hook-request.json' : 'php://input';
-$inputPath = APP_DIR . '/sample-merged-hook-request.json';
+$inputPath = USE_TEST_JSON ? APP_DIR . '/sample-merged-hook-request.json' : 'php://input';
 $rawJson = file_get_contents($inputPath);
 MLog::getInstance()->info('Request json: ' . json_encode(json_decode($rawJson)));
 
