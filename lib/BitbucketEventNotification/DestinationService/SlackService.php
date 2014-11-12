@@ -66,7 +66,7 @@ class SlackService extends DestinationService
             $notify .= sprintf("Pull request has been declined by %s :(", $data['author']['display_name']);
         } else if ($this->pullRequest instanceof PullRequestCommentCreated) {
             $notify .= sprintf("Comment was posted by %s:star:", $data['user']['display_name']);
-            $notify .= sprintf("\n%s", PullRequest::replaceUrlForLink($this->data['links']['html']['href']));
+            $notify .= sprintf("\n%s", PullRequest::replaceUrlForLink($data['links']['html']['href']));
         } else if ($this->pullRequest instanceof PullRequestMerged) {
             $notify .= sprintf("Pull request has been merged by %s. Good job:sunglasses:", $data['author']['display_name']);
         } else if ($this->pullRequest instanceof PullRequestUpdated) {
