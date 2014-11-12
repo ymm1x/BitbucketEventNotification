@@ -76,4 +76,15 @@ abstract class PullRequest
     {
         return $this->data;
     }
+
+    /**
+     * Replace endpoint url to url link.
+     *
+     * @param string $url
+     * @return string
+     */
+    public static function replaceUrlForLink($url)
+    {
+        return str_replace('://api.', '://', $url);
+    }
 }

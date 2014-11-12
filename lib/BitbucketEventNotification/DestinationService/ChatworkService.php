@@ -75,7 +75,7 @@ class ChatworkService extends DestinationService
             $notify .= sprintf("[info]");
             $notify .= sprintf("[title]Comment was posted by %s(*)[/title]", $data['user']['display_name']);
             $notify .= sprintf("%s", $data['content']['raw']);
-            $notify .= sprintf("\n%s", $this->replaceUrlForLink($data['links']['html']['href']));
+            $notify .= sprintf("\n%s", PullRequest::replaceUrlForLink($data['links']['html']['href']));
             $notify .= sprintf("[/info]");
         } else if ($this->pullRequest instanceof PullRequestMerged) {
             $notify .= sprintf("[info]");
@@ -91,16 +91,5 @@ class ChatworkService extends DestinationService
             $notify = null;
         }
         return $notify;
-    }
-
-    /**
-     * Replace endpoint url to url link.
-     *
-     * @param string $url
-     * @return string
-     */
-    private function replaceUrlForLink($url)
-    {
-        return str_replace('://api.', '://', $url);
     }
 }
