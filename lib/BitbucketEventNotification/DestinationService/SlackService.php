@@ -100,6 +100,16 @@ class SlackService extends DestinationService
                 'value' => sprintf("#%d %s", $data['id'], $data['title']),
                 'short' => true,
             );
+            $fields[] = array(
+                'title' => 'Source',
+                'value' => $data['source']['branch']['name'],
+                'short' => true,
+            );
+            $fields[] = array(
+                'title' => 'Destination',
+                'value' => $data['destination']['branch']['name'],
+                'short' => true,
+            );
             if (strlen($data['description']) > 0) {
                 $fields[] = array(
                     'title' => 'Description',
