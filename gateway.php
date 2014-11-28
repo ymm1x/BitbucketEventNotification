@@ -2,7 +2,6 @@
 use BitbucketEventNotification\DestinationService\DestinationService;
 use BitbucketEventNotification\JsonParser\JsonParser;
 use BitbucketEventNotification\Log\MLog;
-use BitbucketEventNotification\Network\AccessSource;
 use BitbucketEventNotification\PullRequest\PullRequest;
 use Monolog\Logger;
 
@@ -44,17 +43,6 @@ if (!isset($_GET['destination_service']) || !$_GET['destination_service']) {
     // default service: chatwork (keep backward compatibility)
     $_GET['destination_service'] = 'chatwork';
 }
-
-// Access source ip check
-$accessSource = new AccessSource($_SERVER['REMOTE_ADDR']);
-if ($accessSource->isForbidden()) {
-    MLog::getInstance()->err('Unauthorized access.');
-    MLog::getInstance()->err('IP Address: ' . $_SERVER['REMOTE_ADDR']);
-    header('HTTP', true, 403);
-    echo json_encode(array('result' => false, 'message' => 'Invalid access.'));
-    exit;
-}
-unset($accessSource);
 
 // Get json from chatwork
 $inputPath = USE_TEST_JSON ? APP_DIR . '/sample-merged-hook-request.json' : 'php://input';
