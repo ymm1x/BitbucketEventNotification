@@ -9,6 +9,14 @@ Notify Chatwork or Slack, when receive pull request notifications from Bitbucket
 2. Hook post request to your server will occur.
 3. This application receives the request, and post notification messages to the chat. (Chatwork or Slack)
 
+## Supported Pull Request Notification
+
+- Created
+- Merged
+- Updated
+- Declined
+- Comment created (on the pull request page)
+
 ## Requires
 
 * PHP 5.3+ with cURL with composer
