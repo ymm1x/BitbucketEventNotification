@@ -1,21 +1,29 @@
 BitbucketEventNotification
 ==========================
 
-Notify Chatwork or Slack, when Bitbucket pull request events occured.
+Notify Chatwork or Slack, when receive pull request notifications from Bitbucket.
 
-## Notification of flow
+## Notification Flow
 
-* Pull Request on Bitbucket
-    * occurred hook post
-* BitbucketEventNotification (this application)
-    * api post
-* Chat Services (Chatwork, Slack...)
+1. Pull Request on Bitbucket
+2. Hook post request to your server will occur.
+3. This application receives the request, and post notification messages to the chat. (Chatwork or Slack)
+
+## Supported Pull Request Notification
+
+- Created
+- Merged
+- Updated
+- Declined
+- Comment created (on the pull request page)
 
 ## Requires
 
 * PHP 5.3+ with cURL with composer
 * Access token of Chatwork, if you want notification to that.
 * Access token of Slack, if you want notification to that. (xoxp-xxxxx)
+    * If you want to create a token to access to the page of [Slack API](https://api.slack.com/).
+* Bitbucket repository with administrator right.
 
 ## Installation
 
@@ -38,9 +46,12 @@ Notify Chatwork or Slack, when Bitbucket pull request events occured.
     * Sample pull request post hook url (for Slack):
         * http://example.com/bitbucket_event_notification/gateway.php?destination_service=slack&room_id=C1234567890
 
-## Parameters of gateway.php
+## Parameters of gateway.php (GET)
 
 |Key|Description|Example for Chatwork|Example for Slack|
 |:---|:---|:---|:---|
 |destination_service|Post destination service name.|chatwork|slack|
 |room_id|Post destination.|1000000000|#bitbucket, C1234567890|
+
+* If you include the # to the channel name, please URL-encoded.
+    * Example: `#bitbucket` -> `%23bitbucket`

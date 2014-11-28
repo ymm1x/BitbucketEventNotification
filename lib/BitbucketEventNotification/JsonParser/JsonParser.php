@@ -9,7 +9,7 @@ namespace BitbucketEventNotification\JsonParser;
 class JsonParser
 {
     /**
-     * JSON をパースして配列で取得します。
+     * Decode a JSON string and return the array.
      *
      * @param string $jsonStr json string
      * @return array|false returns the json decoded array. false is returned if the json cannot be decoded.
