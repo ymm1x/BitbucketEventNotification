@@ -3,6 +3,8 @@ BitbucketEventNotification
 
 Notify Chatwork or Slack, when receive pull request notifications from Bitbucket.
 
+![appearance of chat room](http://sousaku-memo.net/wp-content/uploads/2014/11/appearance-of-chat-room.png)
+
 ## Notification Flow
 
 1. Pull Request on Bitbucket
@@ -55,3 +57,8 @@ Notify Chatwork or Slack, when receive pull request notifications from Bitbucket
 
 * If you include the # to the channel name, please URL-encoded.
     * Example: `#bitbucket` -> `%23bitbucket`
+
+## Author
+
+- [創作メモ帳](http://sousaku-memo.net/)
+- [創作メモ帳 - Slackへのプルリクエスト通知に対応しました](http://sousaku-memo.net/php-system/1264) : Japanese document is here
