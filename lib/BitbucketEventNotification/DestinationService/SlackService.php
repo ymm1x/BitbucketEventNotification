@@ -30,13 +30,12 @@ class SlackService extends DestinationService
     public function postMessage($extendedParams = array())
     {
         $message = $this->createMessageForSlack();
-        $attachments = $this->getAttachments();
 
         /**
          * @var SlackApiClient $apiClient
          */
         $apiClient = $this->getApiClient();
-        $response = $apiClient->postMessage($extendedParams['room_id'], $message, $attachments);
+        $response = $apiClient->postMessage($extendedParams['room_id'], $message);
 
         return $response;
     }
