@@ -71,7 +71,7 @@ class SlackService extends DestinationService
         }
         $message = preg_replace('!\!\[[^]]+\]\(([^)]+)\)!', '\1', $message);
         if ($message) {
-            $message .= "\n";
+            $message = "\n{$message}";
         }
         return $message;
     }
