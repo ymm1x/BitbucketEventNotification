@@ -70,7 +70,7 @@ class SlackService extends DestinationService
         if (isset($data['content']['raw'])) {
             $slack_name_list = array();
             foreach ($user_name_dict as $bitbucket_name => $slack_name) {
-                if (preg_match("!\b{$bitbucket_name}\b!", $data['content']['raw'])) {
+                if (preg_match("!{$bitbucket_name}!", $data['content']['raw'])) {
                     $slack_name_list[] = $slack_name;
                 }
             }
