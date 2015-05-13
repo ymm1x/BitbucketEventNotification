@@ -29,15 +29,14 @@ class SlackService extends DestinationService
      */
     public function postMessage($extendedParams = array())
     {
-        $specialMessage = $this->getSpecialMessage();
-        $notifyMessage = $this->getNotifyMessage();
+        $message = $this->createMessageForSlack();
         $attachments = $this->getAttachments();
 
         /**
          * @var SlackApiClient $apiClient
          */
         $apiClient = $this->getApiClient();
-        $response = $apiClient->postMessage($extendedParams['room_id'], $specialMessage . $notifyMessage, $attachments);
+        $response = $apiClient->postMessage($extendedParams['room_id'], $message, $attachments);
 
         return $response;
     }
@@ -48,6 +47,33 @@ class SlackService extends DestinationService
     public function getApiClient()
     {
         return new SlackApiClient();
+    }
+
+    /**
+     * Create message for Slack
+     *
+     * @return string|null null if failed
+     */
+    private function createMessageForSlack()
+    {
+        // TODO: 設定ファイルに逃がす
+        $user_name_dict = array(
+            '@ks-tetsuya-mori'       => '@monry',
+            '@ks-yoshinori-hirasawa' => '@y-hirasawa',
+            '@ks-shogo-maezawa'      => '@ks-shogo-maezawa',
+        );
+
+        $data = $this->pullRequest->getData();
+        if (!isset($data['content']['raw'])) {
+            return null;
+        }
+
+        $message = $data['content']['raw'];
+        foreach ($user_name_dict as $bitbucket_name => $slack_name) {
+            $message = preg_replace("!{$bitbucket_name}!", $slack_name, $message);
+        }
+        $message .= sprintf("\n%s", PullRequest::replaceUrlForLink($data['links']['html']['href']));
+        return $message;
     }
 
     /**
