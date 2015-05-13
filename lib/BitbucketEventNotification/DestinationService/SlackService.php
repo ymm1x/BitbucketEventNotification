@@ -29,14 +29,15 @@ class SlackService extends DestinationService
      */
     public function postMessage($extendedParams = array())
     {
-        $notifyMessage = $this->getNotifyMessage();
-        $attachments = $this->getAttachments();
+        $message = '';
+        $message .= $this->getNotifyMessage();
+        $message .= $this->getSpecialMessage();
 
         /**
          * @var SlackApiClient $apiClient
          */
         $apiClient = $this->getApiClient();
-        $response = $apiClient->postMessage($extendedParams['room_id'], $notifyMessage, $attachments);
+        $response = $apiClient->postMessage($extendedParams['room_id'], $message);
 
         return $response;
     }
@@ -50,6 +51,32 @@ class SlackService extends DestinationService
     }
 
     /**
+     * Get special message string for post.
+     *
+     * @return string|null null if failed
+     */
+    private function getSpecialMessage()
+    {
+        // TODO: 設定ファイルに逃がす
+        $user_name_dict = array(
+            '@ks-tetsuya-mori'       => '@monry',
+            '@ks-yoshinori-hirasawa' => '@y-hirasawa',
+            '@ks-shogo-maezawa'      => '@ks-shogo-maezawa',
+        );
+
+        $data = $this->pullRequest->getData();
+        $message = $data['content']['raw'];
+        foreach ($user_name_dict as $bitbucket_name => $slack_name) {
+            $message = preg_replace("!{$bitbucket_name}!", $slack_name, $message);
+        }
+        $message = preg_replace('!\!\[[^]]+\]\(([^)]+)\)!', '\1', $message);
+        if ($message) {
+            $message = "\n{$message}";
+        }
+        return $message;
+    }
+
+    /**
      * Get notify message string for post.
      *
      * @return string|null null if failed
@@ -60,17 +87,17 @@ class SlackService extends DestinationService
 
         $notify = '';
         if ($this->pullRequest instanceof PullRequestCreated) {
-            $notify .= sprintf("Pull request has been created by %s. Please review:bow:", $data['author']['display_name']);
+            $notify .= sprintf("Pull request has been created by %s. Please review.", $data['author']['display_name']);
             $notify .= sprintf("\nhttps://bitbucket.org/%s/pull-request/%d", $data['destination']['repository']['full_name'], $data['id']);
         } else if ($this->pullRequest instanceof PullRequestDeclined) {
-            $notify .= sprintf("Pull request has been declined by %s:disappointed:", $data['author']['display_name']);
+            $notify .= sprintf("Pull request has been declined by %s.", $data['author']['display_name']);
         } else if ($this->pullRequest instanceof PullRequestCommentCreated) {
-            $notify .= sprintf("Comment was posted by %s:star:", $data['user']['display_name']);
+            $notify .= sprintf("Comment was posted by %s.", $data['user']['display_name']);
             $notify .= sprintf("\n%s", PullRequest::replaceUrlForLink($data['links']['html']['href']));
         } else if ($this->pullRequest instanceof PullRequestMerged) {
-            $notify .= sprintf("Pull request has been merged by %s. Good job:sunglasses:", $data['author']['display_name']);
+            $notify .= sprintf("Pull request has been merged by %s. Good job.", $data['author']['display_name']);
         } else if ($this->pullRequest instanceof PullRequestUpdated) {
-            $notify .= sprintf("Pull request has been updated by %s. Please re-review:stuck_out_tongue:", $data['author']['display_name']);
+            $notify .= sprintf("Pull request has been updated by %s. Please re-review.", $data['author']['display_name']);
         } else {
             $notify = null;
         }
