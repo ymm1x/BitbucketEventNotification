@@ -67,9 +67,7 @@ class SlackService extends DestinationService
         $data = $this->pullRequest->getData();
 
         $message = '';
-        if ($this->pullRequest instanceof PullRequestCreated) {
-        } else if ($this->pullRequest instanceof PullRequestDeclined) {
-        } else if ($this->pullRequest instanceof PullRequestCommentCreated) {
+        if (isset($data['content']['raw'])) {
             $slack_name_list = array();
             foreach ($user_name_dict as $bitbucket_name => $slack_name) {
                 if (preg_match("!\b{$bitbucket_name}\b!", $data['content']['raw'])) {
@@ -77,10 +75,6 @@ class SlackService extends DestinationService
                 }
             }
             $message .= implode(', ', $slack_name_list);
-        } else if ($this->pullRequest instanceof PullRequestMerged) {
-        } else if ($this->pullRequest instanceof PullRequestUpdated) {
-        } else {
-            $message = null;
         }
         if ($message) {
             $message .= "\n";
