@@ -29,7 +29,9 @@ class SlackService extends DestinationService
      */
     public function postMessage($extendedParams = array())
     {
-        $message = $this->createMessageForSlack();
+        $message = '';
+        $message .= $this->getNotifyMessage();
+        $message .= $this->getSpecialMessage();
 
         /**
          * @var SlackApiClient $apiClient
@@ -49,33 +51,6 @@ class SlackService extends DestinationService
     }
 
     /**
-     * Create message for Slack
-     *
-     * @return string|null null if failed
-     */
-    private function createMessageForSlack()
-    {
-        // TODO: 設定ファイルに逃がす
-        $user_name_dict = array(
-            '@ks-tetsuya-mori'       => '@monry',
-            '@ks-yoshinori-hirasawa' => '@y-hirasawa',
-            '@ks-shogo-maezawa'      => '@ks-shogo-maezawa',
-        );
-
-        $data = $this->pullRequest->getData();
-        if (!isset($data['content']['raw'])) {
-            return null;
-        }
-
-        $message = $data['content']['raw'];
-        foreach ($user_name_dict as $bitbucket_name => $slack_name) {
-            $message = preg_replace("!{$bitbucket_name}!", $slack_name, $message);
-        }
-        $message .= sprintf("\n%s", PullRequest::replaceUrlForLink($data['links']['html']['href']));
-        return $message;
-    }
-
-    /**
      * Get special message string for post.
      *
      * @return string|null null if failed
@@ -90,16 +65,9 @@ class SlackService extends DestinationService
         );
 
         $data = $this->pullRequest->getData();
-
-        $message = '';
-        if (isset($data['content']['raw'])) {
-            $slack_name_list = array();
-            foreach ($user_name_dict as $bitbucket_name => $slack_name) {
-                if (preg_match("!{$bitbucket_name}!", $data['content']['raw'])) {
-                    $slack_name_list[] = $slack_name;
-                }
-            }
-            $message .= implode(', ', $slack_name_list);
+        $message = $data['content']['raw'];
+        foreach ($user_name_dict as $bitbucket_name => $slack_name) {
+            $message = preg_replace("!{$bitbucket_name}!", $slack_name, $message);
         }
         if ($message) {
             $message .= "\n";
