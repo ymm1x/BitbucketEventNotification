@@ -29,6 +29,7 @@ class SlackService extends DestinationService
      */
     public function postMessage($extendedParams = array())
     {
+        $specialMessage = $this->getSpecialMessage();
         $notifyMessage = $this->getNotifyMessage();
         $attachments = $this->getAttachments();
 
@@ -36,7 +37,7 @@ class SlackService extends DestinationService
          * @var SlackApiClient $apiClient
          */
         $apiClient = $this->getApiClient();
-        $response = $apiClient->postMessage($extendedParams['room_id'], $notifyMessage, $attachments);
+        $response = $apiClient->postMessage($extendedParams['room_id'], $specialMessage . $notifyMessage, $attachments);
 
         return $response;
     }
@@ -47,6 +48,44 @@ class SlackService extends DestinationService
     public function getApiClient()
     {
         return new SlackApiClient();
+    }
+
+    /**
+     * Get special message string for post.
+     *
+     * @return string|null null if failed
+     */
+    private function getSpecialMessage()
+    {
+        // TODO: 設定ファイルに逃がす
+        $user_name_dict = array(
+            '@ks-tetsuya-mori'       => '@monry',
+            '@ks-yoshinori-hirasawa' => '@y-hirasawa',
+            '@ks-shogo-maezawa'      => '@ks-shogo-maezawa',
+        );
+
+        $data = $this->pullRequest->getData();
+
+        $message = '';
+        if ($this->pullRequest instanceof PullRequestCreated) {
+        } else if ($this->pullRequest instanceof PullRequestDeclined) {
+        } else if ($this->pullRequest instanceof PullRequestCommentCreated) {
+            $slack_name_list = array();
+            foreach ($user_name_dict as $bitbucket_name => $slack_name) {
+                if (preg_match("!\b{$bitbucket_name}\b!", $data['content']['raw'])) {
+                    $slack_name_list[] = $slack_name;
+                }
+            }
+            $message .= implode(', ', $slack_name_list);
+        } else if ($this->pullRequest instanceof PullRequestMerged) {
+        } else if ($this->pullRequest instanceof PullRequestUpdated) {
+        } else {
+            $message = null;
+        }
+        if ($message) {
+            $message .= "\n";
+        }
+        return $message;
     }
 
     /**
